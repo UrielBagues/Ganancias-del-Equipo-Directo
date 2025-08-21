@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Ganancias del Equipo Directo — estilo unificado</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --magenta:#ef4573;
+    --ink:#222;
+    --muted:#6b7280;
+    --bg:#fafafa;
+    --card:#fff;
+    --border:#e6e6e6;
+    --success:#28a745;
+  }
+
+  *{ box-sizing:border-box }
+  html, body{ height:100% }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Lato', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    font-size:clamp(16px, 3.8vw, 18px); line-height:1.45;
+    -webkit-text-size-adjust:100%;
+    padding:16px; display:flex; flex-direction:column; min-height:100vh;
+  }
+
+  .container{ max-width:980px; margin:0 auto; width:100% }
+  header .container{ text-align:center }
+  h1{
+    font-weight:300; color:var(--magenta); margin:0;
+    font-size:clamp(26px, 6.2vw, 40px); letter-spacing:.2px;
+  }
+  .sub{ margin:6px auto 14px; color:var(--muted); font-size:clamp(15px, 3.8vw, 18px); max-width:720px }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.04);
+    padding:16px;
+  }
+  @media (max-width:480px){ .card{ padding:12px } }
+
+  .section-title{ color:var(--magenta); font-weight:900; letter-spacing:.2px; margin:2px 0 8px; font-size:1.05em }
+
+  label{ display:block; margin:12px 0 6px; font-weight:700 }
+  .help{ font-size:.9em; color:var(--muted); margin:2px 0 10px }
+
+  /* Tacto (tap-wrap) y microinteracciones */
+  .tap-wrap{ position:relative; border-radius:12px; overflow:hidden; margin:8px 0 14px }
+  @media (min-width:981px){
+    .tap-wrap{ margin:10px 0 16px }
+  }
+  .tap-wrap:has(select:disabled),
+  .tap-wrap:has(input:disabled),
+  .tap-wrap:has(button:disabled){ opacity:.7 }
+
+  select.sel, input.entry{
+    width:100%; min-height:44px;
+    padding:10px 40px 10px 12px;
+    font-size:1.05em; font-weight:900;
+    color:#fff; background:var(--magenta);
+    border:none; border-radius:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,.06);
+    line-height:1.2; outline:none;
+    transition:transform .06s ease, box-shadow .2s ease, filter .15s ease;
+    -webkit-tap-highlight-color: transparent;
+    appearance:none;
+  }
+  /* Flecha de select */
+  select.sel{
+    background-image:
+      linear-gradient(transparent, transparent),
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat:no-repeat;
+    background-position:right 12px center;
+    background-size:20px 20px;
+  }
+  select.sel:hover, input.entry:hover{ filter:brightness(1.03) }
+  select.sel:focus, input.entry:focus{ box-shadow:0 0 0 3px rgba(239,69,115,.25), 0 6px 16px rgba(239,69,115,.18) }
+  select.sel:active, input.entry:active{ transform:translateY(1px) scale(.998); box-shadow:0 2px 8px rgba(239,69,115,.12) }
+  input.entry::placeholder{ color:#fff; opacity:.9 }
+
+  /* Botón principal con mismo lenguaje táctil */
+  .controls{ margin-top:12px }
+  button.btn{
+    width:100%; min-height:48px; padding:12px 16px;
+    font-size:1.06em; font-weight:900; color:#fff;
+    background:var(--success); border:none; border-radius:12px;
+    box-shadow:0 6px 12px rgba(40,167,69,.18);
+    transition:transform .06s ease, box-shadow .2s ease, filter .15s ease;
+    -webkit-tap-highlight-color: transparent; outline:none; cursor:pointer;
+  }
+  button.btn:hover{ filter:brightness(1.03) }
+  button.btn:focus{ box-shadow:0 0 0 3px rgba(40,167,69,.25), 0 6px 16px rgba(40,167,69,.18) }
+  button.btn:active{ transform:translateY(1px) scale(.998); box-shadow:0 2px 8px rgba(40,167,69,.12) }
+
+  /* Ripple */
+  .ripple{
+    position:absolute; border-radius:50%; pointer-events:none;
+    transform:scale(0); opacity:.35; background:#fff;
+    mix-blend-mode:soft-light; animation:ripple .45s ease-out forwards;
+  }
+  @keyframes ripple{ to{ transform:scale(1); opacity:0 } }
+
+  /* Tablas más suaves (no bold) */
+  .table-scroll{ width:100%; overflow:auto; border:1px solid var(--border); border-radius:12px; background:#fff }
+  table{ border-collapse:collapse; width:100%; min-width:560px }
+  th, td{ border:1px solid #ddd; padding:8px; text-align:center; height:50px; font-size:.95em; font-weight:400 }
+  th{ background:#f3f4f6 }
+  td .cell-input{
+    width:100%; padding:10px 12px; border-radius:10px; border:1px solid #e5e7eb;
+    font-size:1em; outline:none; transition:box-shadow .2s ease, transform .06s ease;
+  }
+  td .cell-input:focus{ box-shadow:0 0 0 3px rgba(239,69,115,.22) }
+  td .cell-input:active{ transform:translateY(1px) }
+  /* Quitar flechas numéricas */
+  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button{ -webkit-appearance:none; margin:0 }
+  input[type=number]{ -moz-appearance:textfield }
+
+  /* Total destacado */
+  .total-wrap{
+    margin-top:12px; text-align:center;
+  }
+  #total{
+    display:inline-block; margin-top:8px;
+    padding:10px 18px; border-radius:12px;
+    border:2px solid var(--magenta); background:#fff5f9;
+    color:var(--magenta); font-size:clamp(22px, 5.5vw, 32px); font-weight:900;
+  }
+
+  footer{ margin-top:auto; text-align:center; padding:14px; font-size:.9em; color:var(--magenta); font-weight:700; background:#f3f4f6; border-top:2px solid var(--magenta) }
+</style>
+</head>
+<body>
+<header>
+  <div class="container" id="top">
+    <h1>Ganancias del Equipo Directo</h1>
+    <p class="sub">Calculá tus ganancias por categoría y venta personal con un vistazo claro</p>
+  </div>
+</header>
+
+<main class="container">
+  <div class="card">
+    <div class="section-title">Parámetros</div>
+
+    <label for="alianza">Seleccioná tu nivel de alianza</label>
+    <div class="tap-wrap"><select class="sel" id="alianza">
+      <option disabled selected>Completar</option>
+      <option>Emprendedor Platino</option>
+      <option>Empresario Bronce</option>
+      <option>Empresario Plata</option>
+      <option>Empresario Oro</option>
+      <option>Empresario Mentor Plata</option>
+      <option>Empresario Mentor Oro</option>
+      <option>Empresario Mentor Platino</option>
+      <option>Empresario Mentor Diamante</option>
+      <option>Empresario Emblema Oro</option>
+      <option>Empresario Emblema Platino</option>
+      <option>Empresario Emblema Diamante</option>
+    </select></div>
+
+    <label for="precio">Precio promedio del ticket</label>
+    <div class="tap-wrap"><input id="precio" class="entry" type="text" value="$10.000" placeholder="$10.000" oninput="formatearPrecio(this)"/></div>
+
+    <div class="help">Completá la cantidad de puntos de cada categoría:</div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Puntos</th>
+            <th style="display:none;">Ganancia unitaria (%)</th>
+            <th>Ganancia total</th>
+          </tr>
+        </thead>
+        <tbody id="tabla">
+          <tr>
+            <td>Emprendedor Bronce</td>
+            <td><input id="p_bronce" class="cell-input" type="number" placeholder="0" value=""></td>
+            <td id="porc_bronce" style="display:none;">-</td>
+            <td id="gan_bronce">$0</td>
+          </tr>
+          <tr>
+            <td>Emprendedor Plata</td>
+            <td><input id="p_plata" class="cell-input" type="number" placeholder="0" value=""></td>
+            <td id="porc_plata" style="display:none;">-</td>
+            <td id="gan_plata">$0</td>
+          </tr>
+          <tr>
+            <td>Emprendedor Oro</td>
+            <td><input id="p_oro" class="cell-input" type="number" placeholder="0" value=""></td>
+            <td id="porc_oro" style="display:none;">-</td>
+            <td id="gan_oro">$0</td>
+          </tr>
+          <tr>
+            <td>Emprendedor Platino</td>
+            <td><input id="p_platino" class="cell-input" type="number" placeholder="0" value=""></td>
+            <td id="porc_platino" style="display:none;">-</td>
+            <td id="gan_platino">$0</td>
+          </tr>
+          <tr>
+            <td>Venta Personal</td>
+            <td><input id="p_personal" class="cell-input" type="number" placeholder="0" value=""></td>
+            <td id="porc_personal" style="display:none;">-</td>
+            <td id="gan_personal">$0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="controls tap-wrap" style="margin-top:16px">
+      <button class="btn" onclick="calcular()">Calcular Ganancias</button>
+    </div>
+
+    <div class="total-wrap">
+      <div style="font-size:1.05em; color:var(--magenta); font-weight:700;">Total Ganancia Equipo Directo</div>
+      <span id="total">$0</span>
+    </div>
+  </div>
+</main>
+
+<footer>© 2025 Herramienta de cálculo — Equipo Directo</footer>
+
+<script>
+  /* Ripple en elementos táctiles */
+  function addRipple(e, wrap){
+    const rect = wrap.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height) * 1.25;
+    const x = (e.clientX || (rect.left + rect.width/2)) - rect.left - size/2;
+    const y = (e.clientY || (rect.top + rect.height/2)) - rect.top - size/2;
+    const r = document.createElement('span');
+    r.className='ripple';
+    r.style.width=r.style.height=size+'px';
+    r.style.left=x+'px'; r.style.top=y+'px';
+    wrap.appendChild(r);
+    setTimeout(()=> r.remove(), 460);
+  }
+  document.querySelectorAll('.tap-wrap').forEach(w=>{
+    w.addEventListener('pointerdown', (e)=>{
+      if(e.button!==0 && e.pointerType!=='touch') return;
+      addRipple(e, w);
+    });
+  });
+
+  // ======= Lógica de cálculo (respetando tus IDs) =======
+  const porcentajes = {
+    "Emprendedor Platino": [0.0893, 0.0417, 0.0202, 0.0000, 0.3750],
+    "Empresario Bronce": [0.1587, 0.1111, 0.0896, 0.0694, 0.4440],
+    "Empresario Plata": [0.1737, 0.1261, 0.1046, 0.0845, 0.4590],
+    "Empresario Oro": [0.1880, 0.1404, 0.1188, 0.0987, 0.4740],
+    "Empresario Mentor Plata": [0.2015, 0.1538, 0.1323, 0.1122, 0.4870],
+    "Empresario Mentor Oro": [0.2143, 0.1667, 0.1452, 0.1250, 0.5000],
+    "Empresario Mentor Platino": [0.2143, 0.1667, 0.1452, 0.1250, 0.5000],
+    "Empresario Mentor Diamante": [0.2143, 0.1667, 0.1452, 0.1250, 0.5000],
+    "Empresario Emblema Oro": [0.2143, 0.1667, 0.1452, 0.1250, 0.5000],
+    "Empresario Emblema Platino": [0.2143, 0.1667, 0.1452, 0.1250, 0.5000],
+    "Empresario Emblema Diamante": [0.2143, 0.1667, 0.1452, 0.1250, 0.5000]
+  };
+
+  function calcular(){
+    const alianza = document.getElementById('alianza').value;
+    const precio = parseFloat((document.getElementById('precio').value||'').replace(/[^\d]/g,'')) || 0;
+    const puntos = [
+      parseInt(document.getElementById('p_bronce').value)||0,
+      parseInt(document.getElementById('p_plata').value)||0,
+      parseInt(document.getElementById('p_oro').value)||0,
+      parseInt(document.getElementById('p_platino').value)||0,
+      parseInt(document.getElementById('p_personal').value)||0
+    ];
+    const porc = porcentajes[alianza];
+    const ids_porc = ['porc_bronce','porc_plata','porc_oro','porc_platino','porc_personal'];
+    const ids_gan  = ['gan_bronce','gan_plata','gan_oro','gan_platino','gan_personal'];
+    let total = 0;
+
+    if(!porc) return;
+
+    for(let i=0;i<puntos.length;i++){
+      const unidad = porc[i] * precio;
+      const ganancia = unidad * puntos[i];
+      const porcEl = document.getElementById(ids_porc[i]);
+      const ganEl  = document.getElementById(ids_gan[i]);
+      if(porcEl) porcEl.textContent = (porc[i]*100).toFixed(2)+'%';
+      if(ganEl)  ganEl.textContent  = ganancia.toLocaleString('es-AR',{style:'currency',currency:'ARS'});
+      total += ganancia;
+    }
+    document.getElementById('total').textContent = total.toLocaleString('es-AR',{style:'currency',currency:'ARS'});
+
+    // Scroll al total en móvil (mejora de usabilidad); desktop se queda en lugar
+    if(window.matchMedia('(pointer: coarse)').matches){
+      document.getElementById('total').scrollIntoView({behavior:'smooth', block:'center'});
+    }
+  }
+
+  function formatearPrecio(input){
+    let valor = (input.value||'').replace(/[^\d]/g,'');
+    if(valor){
+      input.value = parseInt(valor).toLocaleString('es-AR',{style:'currency',currency:'ARS',minimumFractionDigits:0});
+    }else{
+      input.value = '';
+    }
+  }
+</script>
+</body>
+</html>
